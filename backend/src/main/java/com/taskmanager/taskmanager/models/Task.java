@@ -1,26 +1,28 @@
 package com.taskmanager.taskmanager.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "tasks")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String description;
-    private boolean completed;
 
+    // You can define a relationship to a user here
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    // Constructors
     public Task() {
     }
 
-    public Task(String title, String description, boolean completed) {
+    public Task(String title, String description) {
         this.title = title;
         this.description = description;
-        this.completed = completed;
     }
 
     // Getters and Setters
@@ -48,11 +50,12 @@ public class Task {
         this.description = description;
     }
 
-    public boolean isCompleted() {
-        return completed;
+    // Getters and Setters for relationships
+    public User getUser() {
+        return user;
     }
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
