@@ -1,5 +1,6 @@
 package com.taskmanager.taskmanager.service;
 
+import com.taskmanager.taskmanager.exception.UserNotFoundException;
 import com.taskmanager.taskmanager.models.User;
 import com.taskmanager.taskmanager.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,6 @@ import java.util.List;
 
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
@@ -20,23 +20,27 @@ public class UserService {
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id, User user) {
-        if (userRepository.existsById(id)) {
-            user.setId(id);
-            return userRepository.save(user);
+    public User updateUser(Long id, User updatedUser) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
         }
-        return null; // Handle not found scenario
+        updatedUser.setId(id);
+        return userRepository.save(updatedUser);
     }
 
     public boolean deleteUser(Long id) {
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
         return false;
     }
 }
