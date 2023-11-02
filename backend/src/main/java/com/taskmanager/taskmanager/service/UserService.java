@@ -35,7 +35,8 @@ public class UserService {
         return null; // Handle not found scenario
     }
 
-    public void deleteUser(Long id) {
+    public boolean deleteUser(Long id) {
         userRepository.deleteById(id);
+        return false;
     }
 }

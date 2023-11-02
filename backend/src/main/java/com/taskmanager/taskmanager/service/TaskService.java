@@ -35,7 +35,8 @@ public class TaskService {
         return null; // Handle not found scenario
     }
 
-    public void deleteTask(Long id) {
+    public boolean deleteTask(Long id) {
         taskRepository.deleteById(id);
+        return false;
     }
 }
